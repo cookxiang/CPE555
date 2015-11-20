@@ -4,12 +4,11 @@ Group project of EE810
 
 Group member: Pandong Zhang, Jiabing Xiang, Shan Wang
 
-This project is designed as a messaging system based on S/C Model, it allows users to communicate with others via local area network.
+Project Description: A messaging system based on Server/Client Model is designed in this project, it uses TCP/IP to allow clients send messages to others via local area network. The primary functions of this project is shown below:
 
-1. Server receives and sends to other users
-2. Client sends messages
-3. Client can request broadcast to everyone
+1. Server receives and sends to other clients
+2. Client sends messages to another client.
+3. Client can request broadcast to everyone linked to the same server
 4. Attaching file
 
 
-kakka
