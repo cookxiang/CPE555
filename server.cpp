@@ -19,6 +19,7 @@ int main() {
     struct sockaddr_in server_addr, client_addr;
     socklen_t size;
 //socket()
+//Create a socket with the socket() system call
     listenfd = socket(AF_INET, SOCK_STREAM, 0);
     if (listenfd < 0) {
         cout << "\nError establishing socket..." << endl;
@@ -31,15 +32,20 @@ int main() {
     server_addr.sin_port = htons(portNum);
     server_addr.sin_addr.s_addr = htons (INADDR_ANY);
 //bind()
+//Bind the socket to an address using the bind() system call. For a server socket on the Internet, an address consists of a port number on the host machine.
     if ( bind(listenfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
         cout << "\nError binding connection, the socket has already been established..." << endl;
         exit(1);
     }
     
     cout << "ready to listen" << endl;
+    
 //listen()
+//Listen for connections with the listen() system call
     listen(listenfd, 5);
+    
 //accept()
+//Accept a connection with the accept() system call. This call typically blocks until a client connects with the server.
     size = sizeof(client_addr);
     connfd = accept(listenfd, (struct sockaddr*)&client_addr, &size);
     if(connfd < 0) {
@@ -47,6 +53,7 @@ int main() {
     }
     
 //transfer!!!!!!!!!!!
+//Send and receive data
     while (connfd > 0) {
         strcpy(buffer, "Server connected!!!");
         write(connfd, buffer, bufsize);
