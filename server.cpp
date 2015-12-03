@@ -19,7 +19,7 @@ int main() {
     struct sockaddr_in server_addr, client_addr;
     socklen_t size;
 //socket()
-//Create a socket with the socket() system call
+//Create a socket with the socket() system call.
     listenfd = socket(AF_INET, SOCK_STREAM, 0);
     if (listenfd < 0) {
         cout << "\nError establishing socket..." << endl;
