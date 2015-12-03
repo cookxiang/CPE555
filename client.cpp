@@ -14,7 +14,7 @@ int main() {
     int sockfd;
     int portNum = 1500;
     bool isExit = false;
-    int bufsize = 1024;
+    int bufsize = 1024;         //buffer size
     char buffer[bufsize];
     char* ip = "127.0.0.1";
 //addr struct
