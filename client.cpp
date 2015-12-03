@@ -20,6 +20,7 @@ int main() {
 //addr struct
     struct sockaddr_in server_addr;
 //socket()
+//Create a socket with the socket() system call
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         cout << "\nError establishing socket..." << endl;
@@ -31,10 +32,12 @@ int main() {
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(portNum);
 //connect()
+//Connect the socket to the address of the server using the connect() system call
     if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == 0) {
         cout << "=> Connection to the server port number: " << portNum << endl;
     }
 //transfer
+//Send and receive data. There are a number of ways to do this, but the simplest is to use the read() and write() system calls.
     cout << "=> Awaiting confirmation from the server..." << endl;
     read(sockfd, buffer, bufsize);
     cout << "=> Connection confirmed, you are good to go...";
