@@ -10,14 +10,14 @@ Server::Server(int portNum):portNum(portNum){
     }
     cout << "\nSocket server has been created..." << endl;
 }
-void Server::Serverinit(){
+void Server::server_addr_init(){
     bzero(&server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(portNum);
     server_addr.sin_addr.s_addr = htons (INADDR_ANY);
 }
 
-void Server::getready(){
+void Server::bind_listen(){
     if ( bind(listenfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
         cout << "\nError binding connection, the socket has already been established..." << endl;
         exit(1);
@@ -26,7 +26,7 @@ void Server::getready(){
     listen(listenfd, 5);
 }
 
-int Server::waitforclient(){
+int Server::accept_client(){
     size = sizeof(client_addr);
     connfd = accept(listenfd, (struct sockaddr*)&client_addr, &size);
     if(connfd < 0) {
@@ -52,6 +52,7 @@ void Server::closeconnect(){
 }
 
 void Server::str_echo(int sockfd){
+    char buffer[bufsize];
     ssize_t n;
     n=read(sockfd,buffer,bufsize);
     write(sockfd,buffer,n);

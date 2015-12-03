@@ -1,6 +1,6 @@
 servermain: servermain.o serverclass.o
-	g++ -o servermain -std=c++11 -pthread servermain.o serverclass.o
+	g++ -o servermain servermain.o serverclass.o -std=c++11 
 servermain.o: servermain.cc package.hpp
-	g++ -c -std=c++11 -pthread servermain.cc
+	g++ -c servermain.cc -std=c++11 -pthread
 serverclass.o: serverclass.cc package.hpp
-	g++ -c -std=c++11 -pthread serverclass.cc
+	g++ -c serverclass.cc

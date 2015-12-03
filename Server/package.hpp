@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <thread>
 
 #define bufsize 1024
 //Client member function
@@ -37,14 +38,14 @@ private:
     socklen_t size;
 public:
     Server(int portNum);
-    void Serverinit();
-    void getready();
-    int waitforclient();
+    void server_addr_init();
+    void bind_listen();
+    int accept_client();
     void send2client(int connfd);
     void readclient(int connfd);
     void closelisten();
     void closeconnect();
-    void str_echo(int sockfd);
+    static void str_echo(int sockfd);
 };
 
 
