@@ -5,7 +5,7 @@ mutex m;
 void read_server() {
     int connfd1, connfd2;
     m.lock();
-    Server s1(1510); // read port.
+    Server s1(1510); // read port
     s1.server_addr_init();
     s1.bind_listen();
     m.unlock();

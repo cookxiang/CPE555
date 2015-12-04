@@ -24,7 +24,6 @@ class Client {
 private:
     int sockfd;
     int portNum;
-    //char buffer[bufsize];
     struct sockaddr_in server_addr;
 public:
     Client(int portNum);
@@ -40,7 +39,6 @@ class Server{
 private:
     int listenfd, connfd;
     int portNum;
-    char buffer[bufsize];
     struct sockaddr_in server_addr, client_addr;
     socklen_t size;
 public:
