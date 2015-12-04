@@ -22,6 +22,11 @@ void Client::clientconn(){
     if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == 0)
         cout << "=> Connection to the server port number: " << portNum << endl;
 }
+
+void Client::clientclose(){
+    close(sockfd);
+}
+/*
 void Client::str_cli(){
     //client write to socket
     cout << "client: ";
@@ -32,7 +37,23 @@ void Client::str_cli(){
     read(sockfd, buffer, bufsize);
     cout << buffer << " ";
 }
-void Client::clientclose(){
-    close(sockfd);
+ */
+
+void Client::str_send() {
+    char buffer[bufsize];
+    cout << "client: ";
+    cin >> buffer;
+    write(sockfd, buffer, bufsize);
+    
 }
+
+void Client::str_recieve() {
+    char buffer[bufsize];
+    cout << "server: ";
+    read(sockfd, buffer, bufsize);
+    cout << buffer;
+}
+
+
+
 

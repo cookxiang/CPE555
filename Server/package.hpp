@@ -12,14 +12,19 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <thread>
+#include <vector>
+#include <string>
+#include <mutex>
 
 #define bufsize 1024
 //Client member function
+using namespace std;
+
 class Client {
 private:
     int sockfd;
     int portNum;
-    char buffer[bufsize];
+    //char buffer[bufsize];
     struct sockaddr_in server_addr;
 public:
     Client(int portNum);
@@ -27,6 +32,8 @@ public:
     void clientconn();
     void str_cli();
     void clientclose();
+    void str_send();
+    void str_recieve();
 };
 //Server member function
 class Server{
@@ -41,11 +48,11 @@ public:
     void server_addr_init();
     void bind_listen();
     int accept_client();
-    void send2client(int connfd);
-    void readclient(int connfd);
     void closelisten();
     void closeconnect();
-    static void str_echo(int sockfd);
+    static void str_echo(int sockfd); // string echo
+    static void str_read(int sockfd); // string read
+    static void str_write(int sockfd); // string write
 };
 
 
