@@ -59,25 +59,38 @@ void Server::str_read(int sockfd) {
     read(sockfd, buffer, bufsize);
     rw.lock();
     string re(buffer);
+    cout << "read:buffer:" << re << endl; ////////////
     queue.push_back(re);
-    cout << re << endl;
+    for(int i=0; i<queue.size(); i++) {  ///////////
+        cout << "read:queue[" << i << "]:" << queue[i] << endl;
+    }
     rw.unlock();
 }
 
 void Server::str_write(int sockfd) {
-    //char buffer[bufsize];
-    //strcpy(buffer, queue[0].c_str());
-    //queue.erase( queue.begin() );
-    //write(sockfd, buffer, bufsize);
     while(true)
     {
         rw.lock();
         if(!queue.empty())
         {
+            cout << "write get in critical: connfd: " << sockfd << "---------------------------------------" << endl;
+            cout << "write:nonnfd:" << sockfd << endl; ////////
+            for(int i=0; i<queue.size(); i++) {  ///////////
+                cout << "write:before erase:queue[" << i << "]:" << queue[i] << endl;
+            }
             char buffer[bufsize];
             strcpy(buffer, queue[0].c_str());
-            queue.erase( queue.begin() );
-            write(sockfd, buffer, bufsize);
+            cout << "write:buffer copied from queue[0]:" << buffer << endl;
+            cout << "write:buffer[0]: " << buffer[0] <<endl;
+            if(buffer[0] == sockfd) {
+                cout << "write: get in if(bufer[0] == sockfd)!" << endl;
+                queue.erase( queue.begin() );
+                for(int i=0; i<queue.size(); i++) {  ///////////
+                    cout << "write:after erase:queue[" << i << "]:" << queue[i] << endl;
+                }
+                write(sockfd, buffer, bufsize);
+            }
+        cout << "---------------------------------------" << "write get out critical: connfd: " << sockfd <<endl;
         }
         rw.unlock();
     }

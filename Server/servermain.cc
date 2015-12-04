@@ -30,9 +30,12 @@ void write_server() {
     m.unlock();
 //t1 write
     connfd1 = s2.accept_client();
-    thread t1_write(Server::str_write,connfd1);
+    //thread t1_write(Server::str_write,connfd1);
 //t2 write
     connfd2 = s2.accept_client();
+    cout << "connfd1:" << connfd1 << endl;
+    cout << "connfd2:" << connfd2 << endl;
+    thread t1_write(Server::str_write,connfd1);
     thread t2_write(Server::str_write,connfd2);
     t1_write.join();
     t2_write.join();
