@@ -74,15 +74,15 @@ void Server::str_write(int sockfd) {
         if(!queue.empty())
         {
             cout << "write get in critical: connfd: " << sockfd << "---------------------------------------" << endl;
-            cout << "write:nonnfd:" << sockfd << endl; ////////
+            cout << "write:connfd:" << sockfd << endl; ////////
             for(int i=0; i<queue.size(); i++) {  ///////////
                 cout << "write:before erase:queue[" << i << "]:" << queue[i] << endl;
             }
             char buffer[bufsize];
             strcpy(buffer, queue[0].c_str());
             cout << "write:buffer copied from queue[0]:" << buffer << endl;
-            cout << "write:buffer[0]: " << buffer[0] <<endl;
-            if(buffer[0] == sockfd) {
+            cout << "write:buffer[0]:" << buffer[0] <<endl;
+            if((int)(buffer[0]-'0') == sockfd) {
                 cout << "write: get in if(bufer[0] == sockfd)!" << endl;
                 queue.erase( queue.begin() );
                 for(int i=0; i<queue.size(); i++) {  ///////////

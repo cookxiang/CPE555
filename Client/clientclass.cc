@@ -44,6 +44,7 @@ void Client::str_send() {
     cout << "client: ";
     cin >> buffer;
     write(sockfd, buffer, bufsize);
+    cout << "done writing" << endl;
     
 }
 
@@ -51,7 +52,8 @@ void Client::str_recieve() {
     char buffer[bufsize];
     cout << "server: ";
     read(sockfd, buffer, bufsize);
-    cout << buffer;
+    cout << "done reading" << endl;
+    cout << buffer << endl;
 }
 
 
