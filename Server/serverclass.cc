@@ -59,32 +59,19 @@ void Server::str_read(int sockfd) {
     while(1){
         char buffer[bufsize];
         read(sockfd, buffer, bufsize); //read()>=0 means client is not closed
-        if (buffer[0] != '0') {
-            rw.lock();
-            string re(buffer);
-            cout << "read:buffer:" << re << endl; ////////////
-            queue.push_back(re);
-            for(int i=0; i<queue.size(); i++) {  ///////////
-                cout << "read:queue[" << i << "]:" << queue[i] << endl;
-            }
+        rw.lock();
+        string re(buffer);
+        cout << "read:buffer:" << re << endl; ////////////
+        queue.push_back(re);
+        for(int i=0; i<queue.size(); i++) {  ///////////
+            cout << "read:queue[" << i << "]:" << queue[i] << endl;
         }
-        else {
-            cout << "read: ready to quit" << endl;
-            string re2(buffer);
-            queue.push_back(re2);
-            return;
-        }
-            
-            rw.unlock();
+        rw.unlock();
         
-    /*
-        else {
-            string re2("0:quit");  // buffer[0] = '0';
-            queue.push_back(re2);
-            cout << "read:client error, ready to quit" << endl;
+        if (buffer[1] == '#') {
+            cout << "read: ready to quit" << endl;
             return;
         }
-     */
     }
 }
 
@@ -94,7 +81,7 @@ void Server::str_write(int sockfd) {
         rw.lock();
         if(!queue.empty())
         {
-            cout << "\nwrite get in critical: connfd: " << sockfd << "---------------------------------------" << endl;
+            cout << "\n[write get in critical: connfd: " << sockfd << "]" << endl;
             cout << "write:connfd:" << sockfd << endl; ////////
             for(int i=0; i<queue.size(); i++) {  ///////////
                 cout << "write:before erase:queue[" << i << "]:" << queue[i] << endl;
@@ -104,21 +91,16 @@ void Server::str_write(int sockfd) {
             cout << "write:buffer copied from queue[0]:" << buffer << endl;
             cout << "write:buffer[0]:" << buffer[0] <<endl;
             if((int)(buffer[0]-'0') == sockfd) {
-                cout << "write: get in if(bufer[0] == sockfd)!" << endl;
                 queue.erase( queue.begin() );
-                for(int i=0; i<queue.size(); i++) {  ///////////
-                    cout << "write:after erase:queue[" << i << "]:" << queue[i] << endl;
+                write(sockfd, buffer, bufsize);
+                if (buffer[1] == '#') {
+                    cout << "write: ready to quit" << endl;
+                    close(sockfd);
+                    rw.unlock();
+                    return;
                 }
-                write(sockfd, buffer, bufsize);
             }
-            if(buffer[0] == '0') {
-                cout << "write: ready to quit" << endl;
-                queue.erase( queue.begin() );
-                write(sockfd, buffer, bufsize);
-                close(sockfd);
-                return;
-            }
-            cout << "---------------------------------------" << "write get out critical: connfd: " << sockfd << '\n' << endl;
+            cout << "[write get out critical: connfd: " << sockfd << "]\n" << endl;
         }
         rw.unlock();
     }

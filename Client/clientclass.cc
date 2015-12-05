@@ -48,7 +48,7 @@ void Client::str_send(int sockfd) {
         char buffer[bufsize];
         cin >> buffer;
         write(sockfd, buffer, bufsize);
-        if (buffer[0] == '0') {
+        if (buffer[1] == '#') {
             cout << "thread_send is closed" << endl;
             return;
         }
@@ -61,7 +61,7 @@ void Client::str_recieve(int sockfd) {
         char buffer[bufsize];
         read(sockfd, buffer, bufsize);
         //cout << "done reading" << endl;
-        if (buffer[0] != '0') {
+        if (buffer[1] != '#') {
             cout << "server: ";
             cout << buffer << endl;
         }
