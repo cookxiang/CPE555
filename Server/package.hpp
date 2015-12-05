@@ -31,7 +31,7 @@ public:
     void clientconn();
     int get_sockfd();
     //static void str_cli();
-    void clientclose();
+    //void clientclose();
     static void str_send(int sockfd);
     static void str_recieve(int sockfd);
 };
@@ -48,8 +48,8 @@ public:
     void server_addr_init();
     void bind_listen();
     int accept_client();
-    void closelisten();
-    void closeconnect();
+    //void closelisten();
+    //void closeconnect();
     static void str_echo(int sockfd); // string echo
     static void str_read(int sockfd); // string read
     static void str_write(int sockfd); // string write

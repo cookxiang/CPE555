@@ -26,11 +26,11 @@ void Client::clientconn(){
 int Client::get_sockfd() {
     return sockfd;
 }
-
+/*
 void Client::clientclose(){
     close(sockfd);
 }
-/*
+
 void Client::str_cli(){
     //client write to socket
     cout << "client: ";
@@ -46,10 +46,12 @@ void Client::str_cli(){
 void Client::str_send(int sockfd) {
     while(1) {
         char buffer[bufsize];
-        //cout << "client: ";
         cin >> buffer;
         write(sockfd, buffer, bufsize);
-        //cout << "done writing" << endl;
+        if (buffer[0] == '0') {
+            cout << "thread_send is closed" << endl;
+            return;
+        }
     }
     
 }
@@ -59,8 +61,16 @@ void Client::str_recieve(int sockfd) {
         char buffer[bufsize];
         read(sockfd, buffer, bufsize);
         //cout << "done reading" << endl;
-        cout << "server: ";
-        cout << buffer << endl;
+        if (buffer[0] != '0') {
+            cout << "server: ";
+            cout << buffer << endl;
+        }
+        else {
+            close(sockfd);
+            cout << "thread_recieve is closed" << endl;
+            cout << "This client is closed" << endl;
+            return;
+        }
     }
 }
 

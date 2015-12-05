@@ -36,7 +36,7 @@ int Server::accept_client(){
     cout << "Client connected! Port Number: " << portNum << endl;
     return connfd;
 }
-
+/*
 void Server::closelisten(){
     close(listenfd);
 }
@@ -53,19 +53,38 @@ void Server::str_echo(int sockfd){
     if(n<0)
         cout<<"read error"<<endl;
 }
+*/
 
 void Server::str_read(int sockfd) {
     while(1){
         char buffer[bufsize];
-        read(sockfd, buffer, bufsize);
-        rw.lock();
-        string re(buffer);
-        cout << "read:buffer:" << re << endl; ////////////
-        queue.push_back(re);
-        for(int i=0; i<queue.size(); i++) {  ///////////
-            cout << "read:queue[" << i << "]:" << queue[i] << endl;
+        read(sockfd, buffer, bufsize); //read()>=0 means client is not closed
+        if (buffer[0] != '0') {
+            rw.lock();
+            string re(buffer);
+            cout << "read:buffer:" << re << endl; ////////////
+            queue.push_back(re);
+            for(int i=0; i<queue.size(); i++) {  ///////////
+                cout << "read:queue[" << i << "]:" << queue[i] << endl;
+            }
         }
-        rw.unlock();
+        else {
+            cout << "read: ready to quit" << endl;
+            string re2(buffer);
+            queue.push_back(re2);
+            return;
+        }
+            
+            rw.unlock();
+        
+    /*
+        else {
+            string re2("0:quit");  // buffer[0] = '0';
+            queue.push_back(re2);
+            cout << "read:client error, ready to quit" << endl;
+            return;
+        }
+     */
     }
 }
 
@@ -75,7 +94,7 @@ void Server::str_write(int sockfd) {
         rw.lock();
         if(!queue.empty())
         {
-            cout << "write get in critical: connfd: " << sockfd << "---------------------------------------" << endl;
+            cout << "\nwrite get in critical: connfd: " << sockfd << "---------------------------------------" << endl;
             cout << "write:connfd:" << sockfd << endl; ////////
             for(int i=0; i<queue.size(); i++) {  ///////////
                 cout << "write:before erase:queue[" << i << "]:" << queue[i] << endl;
@@ -92,7 +111,14 @@ void Server::str_write(int sockfd) {
                 }
                 write(sockfd, buffer, bufsize);
             }
-        cout << "---------------------------------------" << "write get out critical: connfd: " << sockfd <<endl;
+            if(buffer[0] == '0') {
+                cout << "write: ready to quit" << endl;
+                queue.erase( queue.begin() );
+                write(sockfd, buffer, bufsize);
+                close(sockfd);
+                return;
+            }
+            cout << "---------------------------------------" << "write get out critical: connfd: " << sockfd << '\n' << endl;
         }
         rw.unlock();
     }
