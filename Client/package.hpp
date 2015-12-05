@@ -29,11 +29,13 @@ public:
     Client(int portNum);
     void clientinit();
     void clientconn();
-    void str_cli();
+    int get_sockfd();
+    //static void str_cli();
     void clientclose();
-    void str_send();
-    void str_recieve();
+    static void str_send(int sockfd);
+    static void str_recieve(int sockfd);
 };
+
 //Server member function
 class Server{
 private:

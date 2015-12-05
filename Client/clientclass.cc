@@ -23,6 +23,10 @@ void Client::clientconn(){
         cout << "=> Connection to the server port number: " << portNum << endl;
 }
 
+int Client::get_sockfd() {
+    return sockfd;
+}
+
 void Client::clientclose(){
     close(sockfd);
 }
@@ -39,21 +43,25 @@ void Client::str_cli(){
 }
  */
 
-void Client::str_send() {
-    char buffer[bufsize];
-    cout << "client: ";
-    cin >> buffer;
-    write(sockfd, buffer, bufsize);
-    //cout << "done writing" << endl;
+void Client::str_send(int sockfd) {
+    while(1) {
+        char buffer[bufsize];
+        //cout << "client: ";
+        cin >> buffer;
+        write(sockfd, buffer, bufsize);
+        //cout << "done writing" << endl;
+    }
     
 }
 
-void Client::str_recieve() {
-    char buffer[bufsize];
-    cout << "server: ";
-    read(sockfd, buffer, bufsize);
-    //cout << "done reading" << endl;
-    cout << buffer << endl;
+void Client::str_recieve(int sockfd) {
+    while(1) {
+        char buffer[bufsize];
+        read(sockfd, buffer, bufsize);
+        //cout << "done reading" << endl;
+        cout << "server: ";
+        cout << buffer << endl;
+    }
 }
 
 

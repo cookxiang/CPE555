@@ -55,20 +55,22 @@ void Server::str_echo(int sockfd){
 }
 
 void Server::str_read(int sockfd) {
-    char buffer[bufsize];
-    read(sockfd, buffer, bufsize);
-    rw.lock();
-    string re(buffer);
-    cout << "read:buffer:" << re << endl; ////////////
-    queue.push_back(re);
-    for(int i=0; i<queue.size(); i++) {  ///////////
-        cout << "read:queue[" << i << "]:" << queue[i] << endl;
+    while(1){
+        char buffer[bufsize];
+        read(sockfd, buffer, bufsize);
+        rw.lock();
+        string re(buffer);
+        cout << "read:buffer:" << re << endl; ////////////
+        queue.push_back(re);
+        for(int i=0; i<queue.size(); i++) {  ///////////
+            cout << "read:queue[" << i << "]:" << queue[i] << endl;
+        }
+        rw.unlock();
     }
-    rw.unlock();
 }
 
 void Server::str_write(int sockfd) {
-    while(true)
+    while(1)
     {
         rw.lock();
         if(!queue.empty())
