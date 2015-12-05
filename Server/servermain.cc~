@@ -20,7 +20,7 @@ int main() {
     thread t3_read(Server::str_read, connfd3);
     thread t1_write(Server::str_write,connfd1);
     thread t2_write(Server::str_write,connfd2);
-    thread t3_write(Server::str_write,connfd3);
+    thread t3_write(Server::str_write, connfd3);
     //t1,t2 t3 join
     t1_read.join();
     t2_read.join();
