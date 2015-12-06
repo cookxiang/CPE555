@@ -1,5 +1,7 @@
 #include "package.hpp"
+
 vector<string> queue;
+map<string,int> client_list;
 mutex rw;
 
 
@@ -36,24 +38,26 @@ int Server::accept_client(){
     cout << "Client connected! Port Number: " << portNum << endl;
     return connfd;
 }
-/*
-void Server::closelisten(){
-    close(listenfd);
-}
 
-void Server::closeconnect(){
-    close(connfd);
-}
-
-void Server::str_echo(int sockfd){
+void Server::recieve_client_list(int sockfd) {
     char buffer[bufsize];
-    ssize_t n;
-    n=read(sockfd, buffer, bufsize);
-    write(sockfd,buffer,n);
-    if(n<0)
-        cout<<"read error"<<endl;
+    read(sockfd, buffer, bufsize);
+    string name(buffer);
+    client_list[name] = sockfd;
+    for (map<string,int>::iterator itr = client_list.begin(); itr != client_list.end(); ++itr) {
+        cout << "\nname: " << itr->first << endl;
+        cout << "connfd :" << itr->second << endl;
+    }
 }
-*/
+
+void Server::send_client_list(int sockfd) {
+    char buffer[bufsize];
+    for (map<string,int>::iterator itr = client_list.begin(); itr != client_list.end(); ++itr) {
+        string info = '*' + to_string(itr->second) + itr->first;
+        strcpy(buffer, info.c_str());
+        write(sockfd, buffer, bufsize);
+    }
+}
 
 void Server::str_read(int sockfd) {
     while(1){
@@ -70,6 +74,11 @@ void Server::str_read(int sockfd) {
         
         if (buffer[1] == '#') {
             cout << "read: ready to quit" << endl;
+            for (map<string,int>::iterator itr = client_list.begin(); itr != client_list.end(); ++itr) {
+                if (itr->second == sockfd) {
+                    client_list.erase(itr);
+                }
+            }
             return;
         }
     }
@@ -81,16 +90,15 @@ void Server::str_write(int sockfd) {
         rw.lock();
         if(!queue.empty())
         {
-            cout << "\n[write get in critical: connfd: " << sockfd << "]" << endl;
-            cout << "write:connfd:" << sockfd << endl; ////////
-            for(int i=0; i<queue.size(); i++) {  ///////////
-                cout << "write:before erase:queue[" << i << "]:" << queue[i] << endl;
-            }
             char buffer[bufsize];
             strcpy(buffer, queue[0].c_str());
-            cout << "write:buffer copied from queue[0]:" << buffer << endl;
-            cout << "write:buffer[0]:" << buffer[0] <<endl;
             if((int)(buffer[0]-'0') == sockfd) {
+                cout << "\n[write get in critical: connfd: " << sockfd << "]" << endl;
+                cout << "write:connfd:" << sockfd << endl; ////////
+                for(int i=0; i<queue.size(); i++) {  ///////////
+                    cout << "write:before erase:queue[" << i << "]:" << queue[i] << endl;
+                }
+                cout << "write:buffer copied from queue[0]:" << buffer << endl;
                 queue.erase( queue.begin() );
                 write(sockfd, buffer, bufsize);
                 if (buffer[1] == '#') {

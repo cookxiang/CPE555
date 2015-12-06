@@ -15,26 +15,10 @@
 #include <vector>
 #include <string>
 #include <mutex>
+#include <map>
 
 #define bufsize 1024
-//Client member function
 using namespace std;
-
-class Client {
-private:
-    int sockfd;
-    int portNum;
-    struct sockaddr_in server_addr;
-public:
-    Client(int portNum);
-    void clientinit();
-    void clientconn();
-    int get_sockfd();
-    //static void str_cli();
-    //void clientclose();
-    static void str_send(int sockfd);
-    static void str_recieve(int sockfd);
-};
 
 //Server member function
 class Server{
@@ -48,9 +32,8 @@ public:
     void server_addr_init();
     void bind_listen();
     int accept_client();
-    //void closelisten();
-    //void closeconnect();
-    static void str_echo(int sockfd); // string echo
+    void recieve_client_list(int sockfd);
+    void send_client_list(int sockfd);
     static void str_read(int sockfd); // string read
     static void str_write(int sockfd); // string write
 };
