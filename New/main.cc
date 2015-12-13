@@ -11,7 +11,7 @@
 #include "sensor.h"
 
 
-#define DT 0.02         // [s/loop] loop period. 20ms
+#define DT 0.02         //  20ms
 #define AA 0.97         // complementary filter constant
 
 #define A_GAIN 0.0573      // [deg/LSB]
@@ -180,8 +180,6 @@ int sensormain()
 	CFangleX=AA*(CFangleX+rate_gyr_x*DT) +(1 - AA) * AccXangle;
 	CFangleY=AA*(CFangleY+rate_gyr_y*DT) +(1 - AA) * AccYangle;
 
-
-	//printf ("GyroX  %7.3f \t AccXangle \e[m %7.3f \t \033[22;31mCFangleX %7.3f\033[0m\t GyroY  %7.3f \t AccYangle %7.3f \t \033[22;36mCFangleY %7.3f\t\033[0m\n",gyroXangle,AccXangle,CFangleX,gyroYangle,AccYangle,CFangleY);
 
 	//Each loop should be at least 20ms.
         while(mymillis() - startInt < (DT*1000))
